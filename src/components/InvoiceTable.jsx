@@ -1,6 +1,31 @@
 import { useState } from 'react'
+import { Check, X } from 'lucide-react'
 import StatusBadge from './StatusBadge'
 import { formatCurrency, formatDate, isOverdue } from '../lib/invoiceUtils'
+
+const AVATAR_STYLES = [
+  'bg-blue-50 text-blue-600',
+  'bg-violet-50 text-violet-600',
+  'bg-teal-50 text-teal-600',
+  'bg-rose-50 text-rose-600',
+  'bg-amber-50 text-amber-600',
+  'bg-indigo-50 text-indigo-600',
+]
+
+function avatarStyle(name) {
+  const hash = (name || '').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
+  return AVATAR_STYLES[hash % AVATAR_STYLES.length]
+}
+
+function initials(name) {
+  return (name || '?')
+    .trim()
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+}
 
 export default function InvoiceTable({ invoices, onMarkPaid }) {
   const [sortKey, setSortKey] = useState('invoice_date')
@@ -42,7 +67,7 @@ export default function InvoiceTable({ invoices, onMarkPaid }) {
   const SortHeader = ({ label, sortField }) => (
     <th
       onClick={() => toggleSort(sortField)}
-      className="cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 hover:text-gray-700"
+      className="cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-400 hover:text-slate-600"
     >
       {label} {sortKey === sortField ? (sortDir === 'asc' ? '↑' : '↓') : ''}
     </th>
@@ -50,56 +75,62 @@ export default function InvoiceTable({ invoices, onMarkPaid }) {
 
   if (invoices.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center text-sm text-gray-500">
-        Belum ada invoice. Buat invoice pertama kamu.
+      <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center text-sm text-slate-500">
+        Gak ada invoice yang cocok.
       </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm shadow-slate-900/[0.02]">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-slate-100">
+          <thead className="bg-slate-50/60">
             <tr>
               <SortHeader label="Brand" sortField="brand_name" />
               <SortHeader label="No. Invoice" sortField="invoice_number" />
               <SortHeader label="Nominal" sortField="total_amount" />
               <SortHeader label="Jatuh Tempo" sortField="due_date" />
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-400">
                 Status
               </th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-slate-50">
             {sorted.map((invoice) => {
               const overdue = isOverdue(invoice)
               return (
-                <tr
-                  key={invoice.id}
-                  className={overdue ? 'bg-red-50/60' : 'hover:bg-gray-50'}
-                >
-                  <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-900">
-                    {invoice.brand_name}
+                <tr key={invoice.id} className={overdue ? 'bg-red-50/40' : 'hover:bg-slate-50/60'}>
+                  <td className="whitespace-nowrap px-4 py-3.5">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${avatarStyle(invoice.brand_name)}`}
+                      >
+                        {initials(invoice.brand_name)}
+                      </div>
+                      <span className="text-sm font-medium text-slate-900">
+                        {invoice.brand_name}
+                      </span>
+                    </div>
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-500">
+                  <td className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-500">
                     {invoice.invoice_number}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                  <td className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">
                     {formatCurrency(invoice.total_amount)}
                   </td>
                   <td
-                    className={`whitespace-nowrap px-4 py-3 text-sm ${
-                      overdue ? 'font-medium text-red-600' : 'text-gray-500'
+                    className={`whitespace-nowrap px-4 py-3.5 text-sm ${
+                      overdue ? 'font-medium text-red-600' : 'text-slate-500'
                     }`}
                   >
                     {formatDate(invoice.due_date)}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3.5">
                     <StatusBadge invoice={invoice} />
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right text-sm">
+                  <td className="whitespace-nowrap px-4 py-3.5 text-right text-sm">
                     {invoice.status === 'pending' &&
                       (payingId === invoice.id ? (
                         <div className="flex items-center justify-end gap-2">
@@ -107,25 +138,26 @@ export default function InvoiceTable({ invoices, onMarkPaid }) {
                             type="date"
                             value={paidDateInput}
                             onChange={(e) => setPaidDateInput(e.target.value)}
-                            className="rounded-md border border-gray-300 px-2 py-1 text-xs focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                            className="rounded-md border border-slate-200 px-2 py-1 text-xs focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
                           />
                           <button
                             onClick={() => confirmMarkPaid(invoice)}
-                            className="rounded-md bg-accent-600 px-2 py-1 text-xs font-medium text-white hover:bg-accent-700"
+                            className="flex items-center gap-1 rounded-full bg-accent-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-accent-700"
                           >
-                            Simpan
+                            <Check size={12} /> Simpan
                           </button>
                           <button
                             onClick={() => setPayingId(null)}
-                            className="text-xs text-gray-400 hover:text-gray-600"
+                            className="text-slate-400 hover:text-slate-600"
+                            aria-label="Batal"
                           >
-                            Batal
+                            <X size={14} />
                           </button>
                         </div>
                       ) : (
                         <button
                           onClick={() => startMarkPaid(invoice)}
-                          className="rounded-md border border-gray-300 px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100"
+                          className="rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 hover:border-accent-200 hover:bg-accent-50 hover:text-accent-700"
                         >
                           Tandai Lunas
                         </button>

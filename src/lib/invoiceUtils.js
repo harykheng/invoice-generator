@@ -8,6 +8,12 @@ export function calcTotal(items) {
   }, 0)
 }
 
+export function calcTax(subtotal, taxType, taxValue) {
+  if (taxType === 'percent') return subtotal * ((Number(taxValue) || 0) / 100)
+  if (taxType === 'fixed') return Number(taxValue) || 0
+  return 0
+}
+
 export function calcDueDate(invoiceDate, termDays) {
   const date = new Date(invoiceDate)
   date.setDate(date.getDate() + Number(termDays || 0))

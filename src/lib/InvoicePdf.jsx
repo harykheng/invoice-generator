@@ -1,6 +1,6 @@
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer'
 import { businessConfig } from '../config/business'
-import { formatDateLong } from './invoiceUtils'
+import { calcTax, formatDateLong } from './invoiceUtils'
 
 Font.register({
   family: 'Dancing Script',
@@ -187,6 +187,9 @@ export default function InvoicePdf({ invoice }) {
     (sum, item) => sum + (Number(item.qty) || 0) * (Number(item.price) || 0),
     0,
   )
+  const taxType = invoice.tax_type || 'none'
+  const taxAmount = calcTax(subtotal, taxType, invoice.tax_value)
+  const taxLabel = taxType === 'percent' ? `Tax (${invoice.tax_value || 0}%):` : 'Tax:'
 
   return (
     <Document>
@@ -254,6 +257,12 @@ export default function InvoicePdf({ invoice }) {
               <Text style={styles.subtotalLabel}>Sub Total:</Text>
               <Text style={styles.subtotalValue}>{formatIDR(subtotal)}</Text>
             </View>
+            {taxType !== 'none' ? (
+              <View style={styles.subtotalRow}>
+                <Text style={styles.subtotalLabel}>{taxLabel}</Text>
+                <Text style={styles.subtotalValue}>{formatIDR(taxAmount)}</Text>
+              </View>
+            ) : null}
             <View style={styles.totalBox}>
               <Text style={styles.totalText}>TOTAL: {formatIDR(invoice.total_amount)}</Text>
             </View>

@@ -10,6 +10,8 @@ create table if not exists invoices (
   invoice_number text not null unique,
   invoice_date date not null,
   items jsonb not null default '[]'::jsonb,
+  tax_type text not null default 'none' check (tax_type in ('none', 'percent', 'fixed')),
+  tax_value numeric not null default 0,
   total_amount numeric not null default 0,
   payment_term_days integer not null default 14,
   due_date date not null,

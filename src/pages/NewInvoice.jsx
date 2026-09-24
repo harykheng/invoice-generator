@@ -7,6 +7,7 @@ import DatePicker from '../components/DatePicker'
 import CustomSelect from '../components/CustomSelect'
 import {
   calcTotal,
+  calcTax,
   calcDueDate,
   formatCurrency,
   formatDate,
@@ -18,6 +19,12 @@ const TOP_OPTIONS = [
   { label: 'H+14', value: 14 },
   { label: 'H+30', value: 30 },
   { label: 'Custom', value: 'custom' },
+]
+
+const TAX_TYPE_OPTIONS = [
+  { label: 'Tanpa Pajak', value: 'none' },
+  { label: 'Persentase (%)', value: 'percent' },
+  { label: 'Nominal Tetap', value: 'fixed' },
 ]
 
 const today = () => new Date().toISOString().slice(0, 10)
@@ -50,13 +57,17 @@ export default function NewInvoice() {
   const [items, setItems] = useState([{ description: '', qty: 1, unit: '', price: 0 }])
   const [topOption, setTopOption] = useState(14)
   const [customTop, setCustomTop] = useState(14)
+  const [taxType, setTaxType] = useState('none')
+  const [taxValue, setTaxValue] = useState(0)
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
   const termDays = topOption === 'custom' ? Number(customTop) || 0 : Number(topOption)
   const dueDate = calcDueDate(invoiceDate, termDays)
-  const total = calcTotal(items)
+  const subtotal = calcTotal(items)
+  const taxAmount = calcTax(subtotal, taxType, taxValue)
+  const total = subtotal + taxAmount
 
   const resetForm = () => {
     setBrandName('')
@@ -67,6 +78,8 @@ export default function NewInvoice() {
     setItems([{ description: '', qty: 1, unit: '', price: 0 }])
     setTopOption(14)
     setCustomTop(14)
+    setTaxType('none')
+    setTaxValue(0)
     setNotes('')
   }
 
@@ -87,6 +100,8 @@ export default function NewInvoice() {
     setSubmitting(true)
     try {
       const invoiceNumber = await generateInvoiceNumber(invoiceDate)
+      const validSubtotal = calcTotal(validItems)
+      const validTaxAmount = calcTax(validSubtotal, taxType, taxValue)
 
       const invoiceRecord = {
         brand_name: brandName.trim(),
@@ -101,7 +116,9 @@ export default function NewInvoice() {
           unit: item.unit?.trim() || '',
           price: Number(item.price) || 0,
         })),
-        total_amount: calcTotal(validItems),
+        tax_type: taxType,
+        tax_value: taxType === 'none' ? 0 : Number(taxValue) || 0,
+        total_amount: validSubtotal + validTaxAmount,
         payment_term_days: termDays,
         due_date: dueDate,
         status: 'pending',
@@ -190,13 +207,55 @@ export default function NewInvoice() {
 
         <SectionCard icon={ListChecks} title="Rate Card / Item">
           <LineItemsEditor items={items} onChange={setItems} />
-          <div className="mt-4 flex justify-end border-t border-slate-100 pt-4">
-            <span className="text-sm font-medium text-slate-500">
-              Total:&nbsp;
-              <span className="text-base font-semibold text-slate-900">
-                {formatCurrency(total)}
-              </span>
-            </span>
+
+          <div className="mt-5 flex flex-wrap items-end justify-between gap-4 border-t border-slate-100 pt-4">
+            <div className="flex flex-wrap items-end gap-3">
+              <div>
+                <label className={labelClass}>Pajak</label>
+                <CustomSelect
+                  value={taxType}
+                  onChange={setTaxType}
+                  options={TAX_TYPE_OPTIONS}
+                  className="w-44"
+                />
+              </div>
+              {taxType !== 'none' && (
+                <div>
+                  <label className={labelClass}>
+                    {taxType === 'percent' ? 'Persentase (%)' : 'Nominal Pajak (Rp)'}
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step={taxType === 'percent' ? '0.1' : '1'}
+                    value={taxValue}
+                    onChange={(e) => setTaxValue(e.target.value)}
+                    className={`${inputClass} w-36`}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-1 text-right text-sm">
+              <div className="flex justify-end gap-3 text-slate-500">
+                <span>Subtotal:</span>
+                <span className="w-32 tabular-nums">{formatCurrency(subtotal)}</span>
+              </div>
+              {taxType !== 'none' && (
+                <div className="flex justify-end gap-3 text-slate-500">
+                  <span>
+                    Pajak{taxType === 'percent' ? ` (${taxValue || 0}%)` : ''}:
+                  </span>
+                  <span className="w-32 tabular-nums">{formatCurrency(taxAmount)}</span>
+                </div>
+              )}
+              <div className="flex justify-end gap-3 pt-1 font-medium text-slate-500">
+                <span>Total:</span>
+                <span className="w-32 tabular-nums text-base font-semibold text-slate-900">
+                  {formatCurrency(total)}
+                </span>
+              </div>
+            </div>
           </div>
         </SectionCard>
 

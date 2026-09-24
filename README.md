@@ -6,7 +6,7 @@ Personal tool to generate brand endorsement/collab invoices as PDF and track pay
 
 ## Features
 
-- Create an invoice: brand info, multiple rate-card line items, term of payment (TOP), auto-calculated due date and total
+- Create an invoice: brand info, multiple rate-card line items, term of payment (TOP), optional tax (percentage or fixed amount), auto-calculated due date and total
 - Generates a clean, professional PDF invoice on submit and downloads it
 - Dashboard: summary cards (brands worked with, invoices issued, total paid, total pending), sortable invoice table
 - Overdue invoices (`due_date` passed, still `pending`) are highlighted red with an "Overdue" badge and a counter
@@ -18,6 +18,8 @@ Personal tool to generate brand endorsement/collab invoices as PDF and track pay
 2. In the SQL editor, run [`supabase/schema.sql`](./supabase/schema.sql) — creates the `invoices` table, indexes, and row-level security policies (only authenticated users can read/write; there's no public sign-up).
 3. Under **Authentication → Users**, manually create your one user (email + password). Sign-up is not exposed in the app on purpose.
 4. Under **Project Settings → API**, copy the **Project URL** and **anon public key**.
+
+**Already set up before?** Check [`supabase/migrations/`](./supabase/migrations/) for any files you haven't run yet — each is a one-off SQL script for a schema change made after your initial setup (e.g. `001_add_tax_columns.sql`). Run new ones in the SQL editor; they're safe to re-run.
 
 ## 2. Configure the app
 

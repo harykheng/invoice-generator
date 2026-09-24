@@ -28,7 +28,7 @@ const labelClass = 'mb-1.5 block text-sm font-medium text-slate-700'
 
 function SectionCard({ icon: Icon, title, children }) {
   return (
-    <section className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm shadow-slate-900/[0.02] sm:p-6">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-900/[0.06] sm:p-6">
       <div className="mb-5 flex items-center gap-2.5">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-50 text-accent-600">
           <Icon size={16} strokeWidth={2.25} />

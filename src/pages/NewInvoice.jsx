@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Building2, ListChecks, CalendarClock, Download } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import LineItemsEditor from '../components/LineItemsEditor'
 import {
@@ -17,6 +18,24 @@ const TOP_OPTIONS = [
 ]
 
 const today = () => new Date().toISOString().slice(0, 10)
+
+const inputClass =
+  'w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500'
+const labelClass = 'mb-1.5 block text-sm font-medium text-slate-700'
+
+function SectionCard({ icon: Icon, title, children }) {
+  return (
+    <section className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm shadow-slate-900/[0.02] sm:p-6">
+      <div className="mb-5 flex items-center gap-2.5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-50 text-accent-600">
+          <Icon size={16} strokeWidth={2.25} />
+        </div>
+        <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+      </div>
+      {children}
+    </section>
+  )
+}
 
 export default function NewInvoice() {
   const navigate = useNavigate()
@@ -118,90 +137,78 @@ export default function NewInvoice() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-6 text-xl font-semibold text-gray-900">Invoice Baru</h1>
+      <div className="mb-6">
+        <p className="text-sm text-slate-500">Bikin tagihan buat brand kerjasama</p>
+        <h1 className="text-2xl font-semibold text-slate-900">Invoice Baru</h1>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <section className="rounded-xl border border-gray-200 bg-white p-5">
-          <h2 className="mb-4 text-sm font-semibold text-gray-900">Info Brand</h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <SectionCard icon={Building2} title="Info Brand">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Brand Name *
-              </label>
+              <label className={labelClass}>Brand Name *</label>
               <input
                 type="text"
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Nama PT
-              </label>
+              <label className={labelClass}>Nama PT</label>
               <input
                 type="text"
                 value={ptName}
                 onChange={(e) => setPtName(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className={inputClass}
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Alamat PT
-              </label>
+              <label className={labelClass}>Alamat PT</label>
               <input
                 type="text"
                 value={ptAddress}
                 onChange={(e) => setPtAddress(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className={inputClass}
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Kontak (email/no. HP)
-              </label>
+              <label className={labelClass}>Kontak (email/no. HP)</label>
               <input
                 type="text"
                 value={ptContact}
                 onChange={(e) => setPtContact(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className={inputClass}
               />
             </div>
           </div>
-        </section>
+        </SectionCard>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-5">
-          <h2 className="mb-4 text-sm font-semibold text-gray-900">Rate Card / Item</h2>
+        <SectionCard icon={ListChecks} title="Rate Card / Item">
           <LineItemsEditor items={items} onChange={setItems} />
-          <div className="mt-4 flex justify-end border-t border-gray-100 pt-4">
-            <span className="text-sm font-medium text-gray-500">
+          <div className="mt-4 flex justify-end border-t border-slate-100 pt-4">
+            <span className="text-sm font-medium text-slate-500">
               Total:&nbsp;
-              <span className="text-base font-semibold text-gray-900">
+              <span className="text-base font-semibold text-slate-900">
                 {formatCurrency(total)}
               </span>
             </span>
           </div>
-        </section>
+        </SectionCard>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-5">
-          <h2 className="mb-4 text-sm font-semibold text-gray-900">Pembayaran</h2>
+        <SectionCard icon={CalendarClock} title="Pembayaran">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Tanggal Invoice
-              </label>
+              <label className={labelClass}>Tanggal Invoice</label>
               <input
                 type="date"
                 value={invoiceDate}
                 onChange={(e) => setInvoiceDate(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Term of Payment
-              </label>
+              <label className={labelClass}>Term of Payment</label>
               <select
                 value={topOption}
                 onChange={(e) =>
@@ -209,7 +216,7 @@ export default function NewInvoice() {
                     e.target.value === 'custom' ? 'custom' : Number(e.target.value),
                   )
                 }
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className={inputClass}
               >
                 {TOP_OPTIONS.map((opt) => (
                   <option key={opt.label} value={opt.value}>
@@ -224,37 +231,33 @@ export default function NewInvoice() {
                   value={customTop}
                   onChange={(e) => setCustomTop(e.target.value)}
                   placeholder="Jumlah hari"
-                  className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                  className={`${inputClass} mt-2`}
                 />
               )}
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Jatuh Tempo
-              </label>
+              <label className={labelClass}>Jatuh Tempo</label>
               <input
                 type="text"
                 readOnly
                 value={dueDate}
-                className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500"
+                className="w-full rounded-xl border border-slate-100 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-500"
               />
             </div>
           </div>
           <div className="mt-4">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Catatan (opsional)
-            </label>
+            <label className={labelClass}>Catatan (opsional)</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+              className={inputClass}
             />
           </div>
-        </section>
+        </SectionCard>
 
         {error && (
-          <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
             {error}
           </div>
         )}
@@ -263,8 +266,9 @@ export default function NewInvoice() {
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-md bg-accent-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-accent-700 disabled:opacity-60"
+            className="flex items-center gap-2 rounded-full bg-accent-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-accent-600/30 hover:bg-accent-700 disabled:opacity-60"
           >
+            <Download size={16} />
             {submitting ? 'Generating...' : 'Generate PDF & Simpan'}
           </button>
         </div>

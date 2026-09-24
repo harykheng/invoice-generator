@@ -15,7 +15,7 @@ function formatIDR(amount) {
 
 const styles = StyleSheet.create({
   page: {
-    fontFamily: 'Courier',
+    fontFamily: 'Helvetica',
     fontSize: 9,
     color: '#000000',
   },
@@ -44,13 +44,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   invoiceTitle: {
-    fontFamily: 'Courier-Bold',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 26,
     marginBottom: 10,
     letterSpacing: 0.5,
   },
   issuerName: {
-    fontFamily: 'Courier-Bold',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 22,
     marginBottom: 10,
     letterSpacing: 0.5,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   sectionLabel: {
-    fontFamily: 'Courier-Bold',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 14,
     marginBottom: 10,
   },
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   tableHeaderCell: {
-    fontFamily: 'Courier-Bold',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 10,
     color: '#ffffff',
     letterSpacing: 1,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     minWidth: 220,
   },
   totalText: {
-    fontFamily: 'Courier-Bold',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 13,
     textAlign: 'right',
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   paymentLabel: {
-    fontFamily: 'Courier-Bold',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 11,
     marginBottom: 8,
   },
@@ -151,14 +151,14 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   paymentBold: {
-    fontFamily: 'Courier-Bold',
+    fontFamily: 'Helvetica-Bold',
   },
   notesBlock: {
     marginTop: 16,
     maxWidth: 260,
   },
   notesLabel: {
-    fontFamily: 'Courier-Bold',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 9,
     marginBottom: 3,
   },

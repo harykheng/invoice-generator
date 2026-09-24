@@ -31,6 +31,15 @@ export function formatDate(dateStr) {
   })
 }
 
+export function formatDateLong(dateStr) {
+  if (!dateStr) return '-'
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
 export function isOverdue(invoice) {
   if (invoice.status !== 'pending') return false
   const today = new Date().toISOString().slice(0, 10)

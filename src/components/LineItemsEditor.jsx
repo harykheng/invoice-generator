@@ -4,6 +4,8 @@ import { formatCurrency } from '../lib/invoiceUtils'
 const inputClass =
   'rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500'
 
+const GRID_COLS = 'sm:grid-cols-[1fr,64px,96px,120px,120px,32px]'
+
 export default function LineItemsEditor({ items, onChange }) {
   const updateItem = (idx, field, value) => {
     const next = items.map((item, i) => (i === idx ? { ...item, [field]: value } : item))
@@ -11,7 +13,7 @@ export default function LineItemsEditor({ items, onChange }) {
   }
 
   const addItem = () => {
-    onChange([...items, { description: '', qty: 1, price: 0 }])
+    onChange([...items, { description: '', qty: 1, unit: '', price: 0 }])
   }
 
   const removeItem = (idx) => {
@@ -20,9 +22,10 @@ export default function LineItemsEditor({ items, onChange }) {
 
   return (
     <div>
-      <div className="hidden gap-3 px-1 text-xs font-medium text-slate-400 sm:grid sm:grid-cols-[1fr,80px,140px,140px,32px]">
+      <div className={`hidden gap-3 px-1 text-xs font-medium text-slate-400 sm:grid ${GRID_COLS}`}>
         <span>Deskripsi</span>
         <span>Qty</span>
+        <span>Satuan</span>
         <span>Harga</span>
         <span>Subtotal</span>
         <span></span>
@@ -33,7 +36,7 @@ export default function LineItemsEditor({ items, onChange }) {
           return (
             <div
               key={idx}
-              className="grid grid-cols-2 gap-3 rounded-xl border border-slate-100 p-3 sm:grid-cols-[1fr,80px,140px,140px,32px] sm:items-center sm:border-0 sm:p-0"
+              className={`grid grid-cols-2 gap-3 rounded-xl border border-slate-100 p-3 sm:grid sm:items-center sm:border-0 sm:p-0 ${GRID_COLS}`}
             >
               <input
                 type="text"
@@ -48,6 +51,13 @@ export default function LineItemsEditor({ items, onChange }) {
                 placeholder="Qty"
                 value={item.qty}
                 onChange={(e) => updateItem(idx, 'qty', e.target.value)}
+                className={inputClass}
+              />
+              <input
+                type="text"
+                placeholder="Videos"
+                value={item.unit || ''}
+                onChange={(e) => updateItem(idx, 'unit', e.target.value)}
                 className={inputClass}
               />
               <input

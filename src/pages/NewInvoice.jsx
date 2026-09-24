@@ -47,7 +47,7 @@ export default function NewInvoice() {
   const [ptAddress, setPtAddress] = useState('')
   const [ptContact, setPtContact] = useState('')
   const [invoiceDate, setInvoiceDate] = useState(today())
-  const [items, setItems] = useState([{ description: '', qty: 1, price: 0 }])
+  const [items, setItems] = useState([{ description: '', qty: 1, unit: '', price: 0 }])
   const [topOption, setTopOption] = useState(14)
   const [customTop, setCustomTop] = useState(14)
   const [notes, setNotes] = useState('')
@@ -64,7 +64,7 @@ export default function NewInvoice() {
     setPtAddress('')
     setPtContact('')
     setInvoiceDate(today())
-    setItems([{ description: '', qty: 1, price: 0 }])
+    setItems([{ description: '', qty: 1, unit: '', price: 0 }])
     setTopOption(14)
     setCustomTop(14)
     setNotes('')
@@ -98,6 +98,7 @@ export default function NewInvoice() {
         items: validItems.map((item) => ({
           description: item.description,
           qty: Number(item.qty) || 0,
+          unit: item.unit?.trim() || '',
           price: Number(item.price) || 0,
         })),
         total_amount: calcTotal(validItems),

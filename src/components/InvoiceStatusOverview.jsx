@@ -42,15 +42,13 @@ export default function InvoiceStatusOverview({ invoices }) {
           const pct = grandTotal > 0 ? (amount / grandTotal) * 100 : 0
           return (
             <div key={row.key}>
-              <div className="mb-1.5 flex items-center justify-between gap-3 text-sm">
-                <span className="flex items-center gap-2 font-medium text-slate-700">
-                  <span className={`h-2 w-2 rounded-full ${row.dot}`} />
-                  {row.label}
-                </span>
-                <span className="whitespace-nowrap text-slate-500">
-                  {count} invoice · {formatCurrency(amount)}
-                </span>
+              <div className="mb-1.5 flex items-center gap-2 text-sm">
+                <span className={`h-2 w-2 shrink-0 rounded-full ${row.dot}`} />
+                <span className="font-medium text-slate-700">{row.label}</span>
               </div>
+              <p className="mb-1.5 text-xs text-slate-500">
+                {count} invoice · {formatCurrency(amount)}
+              </p>
               <div className={`h-2.5 overflow-hidden rounded-full ${row.track}`}>
                 <div
                   className={`h-full rounded-full ${row.fill} transition-all`}

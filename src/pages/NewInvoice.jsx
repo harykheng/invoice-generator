@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { Building2, ListChecks, CalendarClock, Download } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import LineItemsEditor from '../components/LineItemsEditor'
+import DatePicker from '../components/DatePicker'
+import CustomSelect from '../components/CustomSelect'
 import {
   calcTotal,
   calcDueDate,
   formatCurrency,
+  formatDate,
   generateInvoiceNumber,
 } from '../lib/invoiceUtils'
 
@@ -200,30 +203,11 @@ export default function NewInvoice() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <label className={labelClass}>Tanggal Invoice</label>
-              <input
-                type="date"
-                value={invoiceDate}
-                onChange={(e) => setInvoiceDate(e.target.value)}
-                className={inputClass}
-              />
+              <DatePicker value={invoiceDate} onChange={setInvoiceDate} />
             </div>
             <div>
               <label className={labelClass}>Term of Payment</label>
-              <select
-                value={topOption}
-                onChange={(e) =>
-                  setTopOption(
-                    e.target.value === 'custom' ? 'custom' : Number(e.target.value),
-                  )
-                }
-                className={inputClass}
-              >
-                {TOP_OPTIONS.map((opt) => (
-                  <option key={opt.label} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+              <CustomSelect value={topOption} onChange={setTopOption} options={TOP_OPTIONS} />
               {topOption === 'custom' && (
                 <input
                   type="number"
@@ -237,12 +221,10 @@ export default function NewInvoice() {
             </div>
             <div>
               <label className={labelClass}>Jatuh Tempo</label>
-              <input
-                type="text"
-                readOnly
-                value={dueDate}
-                className="w-full rounded-xl border border-slate-100 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-500"
-              />
+              <div className="flex w-full items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-500">
+                {formatDate(dueDate)}
+                <CalendarClock size={16} className="shrink-0 text-slate-300" />
+              </div>
             </div>
           </div>
           <div className="mt-4">

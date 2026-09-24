@@ -92,7 +92,7 @@ export default function Layout({ children }) {
           </button>
         </header>
 
-        <main className="flex-1 overflow-y-auto bg-slate-50 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <main className="flex-1 overflow-y-auto bg-slate-100 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
           {children}
         </main>
       </div>

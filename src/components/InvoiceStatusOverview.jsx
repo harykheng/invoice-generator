@@ -33,7 +33,7 @@ export default function InvoiceStatusOverview({ invoices }) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm shadow-slate-900/[0.02] sm:p-6">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-900/[0.06] sm:p-6">
       <h2 className="mb-5 text-sm font-semibold text-slate-900">Ringkasan Status Invoice</h2>
       <div className="space-y-4">
         {ROWS.map((row) => {

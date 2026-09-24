@@ -8,7 +8,7 @@ export default function RecentInvoices({ invoices }) {
     .slice(0, 5)
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm shadow-slate-900/[0.02] sm:p-6">
+    <div className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-900/[0.06] sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-slate-900">Invoice Terbaru</h2>
         <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">

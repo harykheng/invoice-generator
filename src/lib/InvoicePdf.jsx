@@ -202,7 +202,6 @@ export default function InvoicePdf({ invoice }) {
               <Text style={styles.invoiceTitle}>INVOICE</Text>
               <Text style={styles.metaLine}>Invoice Number: {invoice.invoice_number}</Text>
               <Text style={styles.metaLine}>Date: {formatDateLong(invoice.invoice_date)}</Text>
-              <Text style={styles.metaLine}>Due Date: {formatDateLong(invoice.due_date)}</Text>
             </View>
             <View style={styles.headerRight}>
               <Text style={styles.issuerName}>{businessConfig.name.toUpperCase()}</Text>

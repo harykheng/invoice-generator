@@ -113,15 +113,19 @@ const styles = StyleSheet.create({
   },
   subtotalRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     width: 220,
     marginBottom: 10,
   },
   subtotalLabel: {
     fontSize: 9,
+    width: 100,
+    textAlign: 'right',
+    marginRight: 12,
   },
   subtotalValue: {
     fontSize: 9,
+    flex: 1,
+    textAlign: 'right',
   },
   totalBox: {
     backgroundColor: '#f3f3f3',

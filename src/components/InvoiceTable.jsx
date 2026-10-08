@@ -1,14 +1,27 @@
 import { useState } from 'react'
-import { Check, X } from 'lucide-react'
+import { Check, X, Download, Loader2 } from 'lucide-react'
 import StatusBadge from './StatusBadge'
 import { formatCurrency, formatDate, isOverdue } from '../lib/invoiceUtils'
 import { avatarStyle, initials } from '../lib/avatar'
+import { downloadInvoicePdf } from '../lib/downloadInvoicePdf'
 
-export default function InvoiceTable({ invoices, onMarkPaid }) {
+export default function InvoiceTable({ invoices, onMarkPaid, onError }) {
   const [sortKey, setSortKey] = useState('invoice_date')
   const [sortDir, setSortDir] = useState('desc')
   const [payingId, setPayingId] = useState(null)
   const [paidDateInput, setPaidDateInput] = useState('')
+  const [downloadingId, setDownloadingId] = useState(null)
+
+  const handleDownload = async (invoice) => {
+    setDownloadingId(invoice.id)
+    try {
+      await downloadInvoicePdf(invoice)
+    } catch (err) {
+      onError?.(err.message || 'Gagal generate PDF.')
+    } finally {
+      setDownloadingId(null)
+    }
+  }
 
   const toggleSort = (key) => {
     if (sortKey === key) {
@@ -108,37 +121,54 @@ export default function InvoiceTable({ invoices, onMarkPaid }) {
                     <StatusBadge invoice={invoice} />
                   </td>
                   <td className="whitespace-nowrap px-4 py-3.5 text-right text-sm">
-                    {invoice.status === 'pending' &&
-                      (payingId === invoice.id ? (
-                        <div className="flex items-center justify-end gap-2">
-                          <input
-                            type="date"
-                            value={paidDateInput}
-                            onChange={(e) => setPaidDateInput(e.target.value)}
-                            className="rounded-md border border-slate-200 px-2 py-1 text-xs focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
-                          />
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => handleDownload(invoice)}
+                        disabled={downloadingId === invoice.id}
+                        className="flex items-center gap-1 rounded-full border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 hover:border-accent-200 hover:bg-accent-50 hover:text-accent-700 disabled:opacity-60"
+                        aria-label="Generate ulang PDF"
+                        title="Generate ulang PDF"
+                      >
+                        {downloadingId === invoice.id ? (
+                          <Loader2 size={12} className="animate-spin" />
+                        ) : (
+                          <Download size={12} />
+                        )}
+                        PDF
+                      </button>
+
+                      {invoice.status === 'pending' &&
+                        (payingId === invoice.id ? (
+                          <>
+                            <input
+                              type="date"
+                              value={paidDateInput}
+                              onChange={(e) => setPaidDateInput(e.target.value)}
+                              className="rounded-md border border-slate-200 px-2 py-1 text-xs focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                            />
+                            <button
+                              onClick={() => confirmMarkPaid(invoice)}
+                              className="flex items-center gap-1 rounded-full bg-accent-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-accent-700"
+                            >
+                              <Check size={12} /> Simpan
+                            </button>
+                            <button
+                              onClick={() => setPayingId(null)}
+                              className="text-slate-400 hover:text-slate-600"
+                              aria-label="Batal"
+                            >
+                              <X size={14} />
+                            </button>
+                          </>
+                        ) : (
                           <button
-                            onClick={() => confirmMarkPaid(invoice)}
-                            className="flex items-center gap-1 rounded-full bg-accent-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-accent-700"
+                            onClick={() => startMarkPaid(invoice)}
+                            className="rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 hover:border-accent-200 hover:bg-accent-50 hover:text-accent-700"
                           >
-                            <Check size={12} /> Simpan
+                            Tandai Lunas
                           </button>
-                          <button
-                            onClick={() => setPayingId(null)}
-                            className="text-slate-400 hover:text-slate-600"
-                            aria-label="Batal"
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => startMarkPaid(invoice)}
-                          className="rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 hover:border-accent-200 hover:bg-accent-50 hover:text-accent-700"
-                        >
-                          Tandai Lunas
-                        </button>
-                      ))}
+                        ))}
+                    </div>
                   </td>
                 </tr>
               )

@@ -7,8 +7,8 @@ export const businessConfig = {
   phone: '+62 812-3456-7890',
   bank: {
     bankName: 'Bank BCA',
-    accountName: 'Regina',
-    accountNumber: '1234567890',
+    accountName: 'Regina Clara',
+    accountNumber: '8805029940',
   },
   taxId: '', // NPWP, optional — leave blank to hide on PDF
 }

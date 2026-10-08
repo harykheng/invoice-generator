@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Building2, ListChecks, CalendarClock, Download } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
+import { downloadInvoicePdf } from '../lib/downloadInvoicePdf'
 import LineItemsEditor from '../components/LineItemsEditor'
 import DatePicker from '../components/DatePicker'
 import CustomSelect from '../components/CustomSelect'
@@ -133,19 +134,7 @@ export default function NewInvoice() {
 
       if (insertError) throw insertError
 
-      const [{ pdf }, { default: InvoicePdf }] = await Promise.all([
-        import('@react-pdf/renderer'),
-        import('../lib/InvoicePdf'),
-      ])
-      const blob = await pdf(<InvoicePdf invoice={data} />).toBlob()
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${data.invoice_number}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      URL.revokeObjectURL(url)
+      await downloadInvoicePdf(data)
 
       resetForm()
       navigate('/')

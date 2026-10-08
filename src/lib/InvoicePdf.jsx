@@ -113,11 +113,12 @@ const styles = StyleSheet.create({
   },
   subtotalRow: {
     flexDirection: 'row',
-    marginBottom: 12,
+    justifyContent: 'space-between',
+    width: 220,
+    marginBottom: 10,
   },
   subtotalLabel: {
     fontSize: 9,
-    marginRight: 28,
   },
   subtotalValue: {
     fontSize: 9,
@@ -127,11 +128,11 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     paddingHorizontal: 18,
     minWidth: 220,
+    alignItems: 'flex-end',
   },
   totalText: {
     fontFamily: 'Helvetica-Bold',
     fontSize: 13,
-    textAlign: 'right',
   },
   spacer: {
     flexGrow: 1,
@@ -202,7 +203,6 @@ export default function InvoicePdf({ invoice }) {
               <Text style={styles.invoiceTitle}>INVOICE</Text>
               <Text style={styles.metaLine}>Invoice Number: {invoice.invoice_number}</Text>
               <Text style={styles.metaLine}>Date: {formatDateLong(invoice.invoice_date)}</Text>
-              <Text style={styles.metaLine}>Due Date: {formatDateLong(invoice.due_date)}</Text>
             </View>
             <View style={styles.headerRight}>
               <Text style={styles.issuerName}>{businessConfig.name.toUpperCase()}</Text>

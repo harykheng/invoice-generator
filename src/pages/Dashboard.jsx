@@ -120,7 +120,11 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <InvoiceTable invoices={filteredInvoices} onMarkPaid={handleMarkPaid} />
+          <InvoiceTable
+            invoices={filteredInvoices}
+            onMarkPaid={handleMarkPaid}
+            onError={setError}
+          />
         </>
       )}
     </div>

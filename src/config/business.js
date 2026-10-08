@@ -4,7 +4,7 @@ export const businessConfig = {
   fullName: 'Regina',
   address: 'Jakarta, Indonesia',
   email: 'your-email@example.com',
-  phone: '+62 812-3456-7890',
+  phone: '+62 812-9256-7788',
   bank: {
     bankName: 'Bank BCA',
     accountName: 'Regina Clara',
